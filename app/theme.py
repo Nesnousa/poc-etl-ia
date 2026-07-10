@@ -10,6 +10,7 @@ import base64
 from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
 
 EY_YELLOW = "#FFE600"
 EY_DARK = "#2E2E38"
@@ -56,7 +57,7 @@ def inject_global_css() -> None:
             max-width: 1200px;
         }}
 
-        /* Fond principal clair (évite le blanc-sur-blanc en dark mode Streamlit Cloud) */
+        /* Fond principal clair */
         .stApp {{
             background: {EY_LIGHT_GRAY};
             color: {EY_DARK};
@@ -64,15 +65,9 @@ def inject_global_css() -> None:
         [data-testid="stAppViewContainer"] {{
             background: {EY_LIGHT_GRAY};
         }}
-        [data-testid="stMain"] {{
-            color: {EY_DARK};
-        }}
-        [data-testid="stMarkdownContainer"],
-        [data-testid="stMarkdownContainer"] p,
-        [data-testid="stMarkdownContainer"] li,
-        [data-testid="stMarkdownContainer"] span {{
-            color: {EY_DARK};
-        }}
+
+        /* NE PAS forcer la couleur sur tous les <p>/<span> markdown :
+           cela rendait le texte invisible sur les fonds noirs (bandeau / hero). */
 
         /* ---------- Bandeau de marque EY (haut de page) ---------- */
         .ey-topbar {{
@@ -354,32 +349,30 @@ def inject_global_css() -> None:
 
 
 def render_topbar(title: str, subtitle: str, tag: str = "POC — Stage EY") -> None:
+    """Bandeau noir : rendu via components.html pour éviter le sanitizer Streamlit."""
     logo_b64 = _logo_base64()
     logo_html = (
         f'<img src="data:image/png;base64,{logo_b64}" alt="EY" style="height:40px;" />'
         if logo_b64
         else ""
     )
-    st.markdown(
-        f"""
-        <div style="display:flex;align-items:center;justify-content:space-between;
-                    background:#161616;border-bottom:6px solid #FFE600;
-                    padding:18px 28px;border-radius:10px;margin-bottom:28px;">
-            <div style="display:flex;align-items:center;gap:18px;">
-                {logo_html}
-                <div>
-                    <p style="color:#FFFFFF !important;font-size:1.25rem;font-weight:700;
-                              line-height:1.2;margin:0;">{title}</p>
-                    <p style="color:#D0D0DC !important;font-size:0.85rem;margin:0;">{subtitle}</p>
-                </div>
-            </div>
-            <span style="background:#FFE600;color:#161616 !important;font-weight:700;
-                         font-size:0.75rem;letter-spacing:0.04em;text-transform:uppercase;
-                         padding:6px 14px;border-radius:999px;">{tag}</span>
+    html = f"""
+    <div style="display:flex;align-items:center;justify-content:space-between;
+                background:#161616;border-bottom:6px solid #FFE600;
+                padding:18px 28px;border-radius:10px;font-family:Segoe UI,Tahoma,sans-serif;">
+      <div style="display:flex;align-items:center;gap:18px;">
+        {logo_html}
+        <div>
+          <div style="color:#FFFFFF;font-size:1.25rem;font-weight:700;line-height:1.2;">{title}</div>
+          <div style="color:#D0D0DC;font-size:0.85rem;margin-top:4px;">{subtitle}</div>
         </div>
-        """,
-        unsafe_allow_html=True,
-    )
+      </div>
+      <span style="background:#FFE600;color:#161616;font-weight:700;font-size:0.75rem;
+                   letter-spacing:0.04em;text-transform:uppercase;padding:6px 14px;
+                   border-radius:999px;">{tag}</span>
+    </div>
+    """
+    components.html(html, height=90)
 
 
 def render_sidebar_brand(caption: str) -> None:
@@ -397,23 +390,21 @@ def render_sidebar_brand(caption: str) -> None:
 
 
 def hero(eyebrow: str, title: str, description: str) -> None:
-    st.markdown(
-        f"""
-        <div style="background:linear-gradient(135deg,#161616 0%,#34343F 100%);
-                    border-radius:14px;padding:34px 36px;margin-bottom:26px;">
-            <span style="display:inline-block;background:#FFE600;color:#161616 !important;
-                         font-weight:700;font-size:0.72rem;letter-spacing:0.06em;
-                         text-transform:uppercase;padding:4px 12px;border-radius:999px;
-                         margin-bottom:14px;">{eyebrow}</span>
-            <h1 style="color:#FFFFFF !important;font-size:1.9rem;font-weight:800;
-                       margin:0 0 8px 0;">{title}</h1>
-            <p style="color:#E4E4EE !important;font-size:1rem;max-width:720px;margin:0;">
-                {description}
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    """Hero sombre : components.html pour garder le texte blanc visible."""
+    html = f"""
+    <div style="background:linear-gradient(135deg,#161616 0%,#34343F 100%);
+                border-radius:14px;padding:28px 32px;font-family:Segoe UI,Tahoma,sans-serif;">
+      <span style="display:inline-block;background:#FFE600;color:#161616;font-weight:700;
+                   font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
+                   padding:4px 12px;border-radius:999px;margin-bottom:12px;">{eyebrow}</span>
+      <div style="color:#FFFFFF;font-size:1.75rem;font-weight:800;margin:10px 0 8px 0;
+                  line-height:1.25;">{title}</div>
+      <div style="color:#E4E4EE;font-size:1rem;max-width:720px;line-height:1.45;">{description}</div>
+    </div>
+    """
+    # Hauteur approximative selon la longueur du texte
+    height = 160 + max(0, (len(description) // 90) * 22)
+    components.html(html, height=height)
 
 
 def section_title(text: str) -> None:
