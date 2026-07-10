@@ -27,9 +27,12 @@ LOGO_PATH = ASSETS_DIR / "ey_logo.png"
 
 @st.cache_data(show_spinner=False)
 def _logo_base64() -> str | None:
-    if not LOGO_PATH.exists():
+    try:
+        if not LOGO_PATH.exists():
+            return None
+        return base64.b64encode(LOGO_PATH.read_bytes()).decode("utf-8")
+    except Exception:
         return None
-    return base64.b64encode(LOGO_PATH.read_bytes()).decode("utf-8")
 
 
 def inject_global_css() -> None:
@@ -37,10 +40,8 @@ def inject_global_css() -> None:
     st.markdown(
         f"""
         <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-
         html, body, [class*="css"] {{
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
         }}
 
         #MainMenu {{visibility: hidden;}}
