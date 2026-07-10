@@ -393,18 +393,21 @@ def hero(eyebrow: str, title: str, description: str) -> None:
     """Hero sombre : components.html pour garder le texte blanc visible."""
     html = f"""
     <div style="background:linear-gradient(135deg,#161616 0%,#34343F 100%);
-                border-radius:14px;padding:28px 32px;font-family:Segoe UI,Tahoma,sans-serif;">
+                border-radius:14px;padding:28px 32px;font-family:Segoe UI,Tahoma,sans-serif;
+                box-sizing:border-box;">
       <span style="display:inline-block;background:#FFE600;color:#161616;font-weight:700;
                    font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
                    padding:4px 12px;border-radius:999px;margin-bottom:12px;">{eyebrow}</span>
-      <div style="color:#FFFFFF;font-size:1.75rem;font-weight:800;margin:10px 0 8px 0;
-                  line-height:1.25;">{title}</div>
-      <div style="color:#E4E4EE;font-size:1rem;max-width:720px;line-height:1.45;">{description}</div>
+      <div style="color:#FFFFFF;font-size:1.75rem;font-weight:800;margin:10px 0 12px 0;
+                  line-height:1.3;">{title}</div>
+      <div style="color:#E4E4EE;font-size:1rem;max-width:900px;line-height:1.55;">{description}</div>
     </div>
     """
-    # Hauteur approximative selon la longueur du texte
-    height = 160 + max(0, (len(description) // 90) * 22)
-    components.html(html, height=height)
+    # Hauteur généreuse : le iframe components.html coupe sinon le bas du texte
+    title_lines = max(1, (len(title) // 55) + 1)
+    desc_lines = max(2, (len(description) // 75) + 1)
+    height = 90 + (title_lines * 36) + (desc_lines * 28) + 48
+    components.html(html, height=height, scrolling=False)
 
 
 def section_title(text: str) -> None:
