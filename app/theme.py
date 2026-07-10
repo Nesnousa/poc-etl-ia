@@ -55,6 +55,24 @@ def inject_global_css() -> None:
             max-width: 1200px;
         }}
 
+        /* Fond principal clair (évite le blanc-sur-blanc en dark mode Streamlit Cloud) */
+        .stApp {{
+            background: {EY_LIGHT_GRAY};
+            color: {EY_DARK};
+        }}
+        [data-testid="stAppViewContainer"] {{
+            background: {EY_LIGHT_GRAY};
+        }}
+        [data-testid="stMain"] {{
+            color: {EY_DARK};
+        }}
+        [data-testid="stMarkdownContainer"],
+        [data-testid="stMarkdownContainer"] p,
+        [data-testid="stMarkdownContainer"] li,
+        [data-testid="stMarkdownContainer"] span {{
+            color: {EY_DARK};
+        }}
+
         /* ---------- Bandeau de marque EY (haut de page) ---------- */
         .ey-topbar {{
             display: flex;
@@ -160,13 +178,29 @@ def inject_global_css() -> None:
 
         /* ---------- Cartes / sections ---------- */
         .ey-card {{
-            background: {EY_WHITE};
+            background: {EY_WHITE} !important;
             border: 1px solid #E6E6EC;
             border-radius: 12px;
             padding: 22px 24px;
             box-shadow: 0 1px 3px rgba(22, 22, 22, 0.06);
             margin-bottom: 18px;
+            color: {EY_DARK} !important;
         }}
+        .ey-card, .ey-card * {{
+            color: {EY_DARK} !important;
+        }}
+        .ey-card b, .ey-card strong {{
+            color: {EY_BLACK} !important;
+        }}
+        .ey-card code {{
+            background: #F0F0F5 !important;
+            color: {EY_BLACK} !important;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }}
+        .ey-card .ey-badge-pass {{ color: {EY_SUCCESS} !important; }}
+        .ey-card .ey-badge-fail {{ color: {EY_DANGER} !important; }}
+        .ey-card .ey-badge-warn {{ color: {EY_WARNING} !important; }}
         .ey-hero {{
             background: linear-gradient(135deg, {EY_BLACK} 0%, #34343F 100%);
             border-radius: 14px;
@@ -250,20 +284,29 @@ def inject_global_css() -> None:
 
         /* ---------- Metrics ---------- */
         div[data-testid="stMetric"] {{
-            background: {EY_WHITE};
+            background: {EY_WHITE} !important;
             border: 1px solid #E6E6EC;
             border-left: 4px solid {EY_YELLOW};
             border-radius: 10px;
             padding: 14px 18px 10px 18px;
+            color: {EY_DARK} !important;
+        }}
+        div[data-testid="stMetric"] * {{
+            color: {EY_DARK} !important;
         }}
         div[data-testid="stMetricValue"] {{
             overflow: visible;
             white-space: normal;
             word-break: break-word;
             font-size: 1.6rem;
+            color: {EY_BLACK} !important;
         }}
         div[data-testid="stMetricLabel"] {{
             white-space: normal;
+            color: {EY_GRAY} !important;
+        }}
+        div[data-testid="stMetricDelta"] {{
+            color: {EY_SUCCESS} !important;
         }}
 
         /* ---------- Tabs ---------- */
