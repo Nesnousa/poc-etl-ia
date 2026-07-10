@@ -1,1 +1,2 @@
-unixodbc-dev
+# Intentionnellement vide : pas de paquets apt nécessaires pour le déploiement cloud.
+# (pyodbc / unixodbc sont réservés à l'exécution locale avec SQL Server)

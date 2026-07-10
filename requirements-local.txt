@@ -1,0 +1,3 @@
+# Dépendances locales (SQL Server) — ne pas utiliser sur Streamlit Cloud
+-r requirements.txt
+pyodbc>=5.0.0
