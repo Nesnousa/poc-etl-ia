@@ -327,7 +327,7 @@ def read_text(path: Path) -> str:
 
 st.set_page_config(
     page_title="POC IA — ETL & Power BI | EY",
-    page_icon=str(LOGO_PATH) if LOGO_PATH.exists() else "📊",
+    page_icon="🟡",
     layout="wide",
 )
 
@@ -518,7 +518,7 @@ elif page == "Bibliothèque de templates":
             "Prompt IA": [s["prompt"] for s in PIPELINE_STEPS],
             "Livrable de référence (validé)": [s["reference"] for s in PIPELINE_STEPS],
         },
-        width="stretch",
+        use_container_width=True,
         hide_index=True,
     )
 
@@ -709,7 +709,7 @@ elif page == "Contrôles qualité Superstore":
                         if demo_df.empty:
                             st.info("Pas d'exemple de lignes pour ce contrôle en mode démonstration.")
                         else:
-                            st.dataframe(demo_df, width="stretch", hide_index=True)
+                            st.dataframe(demo_df, use_container_width=True, hide_index=True)
                             st.info("Données de démonstration — en mode réel, ces lignes proviennent de votre base SQL.")
                     else:
                         diag_df, diag_err = run_diagnostic(server, database, check_id)
@@ -718,7 +718,7 @@ elif page == "Contrôles qualité Superstore":
                         elif diag_df.empty:
                             st.success("Aucune ligne problématique trouvée (le contrôle a peut-être été corrigé entre-temps).")
                         else:
-                            st.dataframe(diag_df, width="stretch", hide_index=True)
+                            st.dataframe(diag_df, use_container_width=True, hide_index=True)
 
                     st.markdown("**Comment corriger :**")
                     for i, step in enumerate(guide.fix_steps, start=1):
@@ -803,12 +803,12 @@ elif page == "Phase 10 — MCP & IA":
     section_title("Ce que Claude a détecté automatiquement")
     t1, t2, t3 = st.tabs(["Tables", "Relations", "Mesures DAX"])
     with t1:
-        st.dataframe(MCP_TABLES, width="stretch", hide_index=True)
+        st.dataframe(MCP_TABLES, use_container_width=True, hide_index=True)
     with t2:
-        st.dataframe(MCP_RELATIONS, width="stretch", hide_index=True)
+        st.dataframe(MCP_RELATIONS, use_container_width=True, hide_index=True)
         st.caption("Toutes les relations sont Plusieurs → un, filtrage à sens unique : pas de many-to-many, pas de bidirectionnel.")
     with t3:
-        st.dataframe(MCP_MEASURES, width="stretch", hide_index=True)
+        st.dataframe(MCP_MEASURES, use_container_width=True, hide_index=True)
 
     st.success(
         "✅ **Vérification du schéma en étoile — validée par l'IA** : une seule table de "
@@ -817,14 +817,14 @@ elif page == "Phase 10 — MCP & IA":
     )
 
     section_title("Recommandations de l'IA vs décision humaine")
-    st.dataframe(MCP_RECOMMENDATIONS, width="stretch", hide_index=True)
+    st.dataframe(MCP_RECOMMENDATIONS, use_container_width=True, hide_index=True)
     st.info(
         "Les deux recommandations ont été **examinées puis arbitrées consciemment** : "
         "l'IA outille la décision, elle ne la remplace pas."
     )
 
     section_title("Comparatif indicatif — audit manuel vs audit assisté par IA")
-    st.dataframe(MCP_COMPARATIF, width="stretch", hide_index=True)
+    st.dataframe(MCP_COMPARATIF, use_container_width=True, hide_index=True)
 
     section_title("Ce que ce test démontre")
     st.markdown(
@@ -866,7 +866,7 @@ elif page == "MCP SQL — Staging & DW":
     )
 
     section_title("Staging vs Data Warehouse (DW)")
-    st.dataframe(MCP_SQL_COMPARE, width="stretch", hide_index=True)
+    st.dataframe(MCP_SQL_COMPARE, use_container_width=True, hide_index=True)
     st.caption(
         "La clé de substitution (surrogate key) du DW est stable et indépendante de la "
         "source ; les relations (clés étrangères) entre le fait et les dimensions forment "
@@ -911,7 +911,7 @@ elif page == "MCP SQL — Staging & DW":
     )
 
     section_title("Résultat attendu (exemple réservations d'hôtel)")
-    st.dataframe(MCP_SQL_RESULT, width="stretch", hide_index=True)
+    st.dataframe(MCP_SQL_RESULT, use_container_width=True, hide_index=True)
     st.success(
         "✅ Modèle complet : 5 lignes en staging (dont 1 doublon) → 3 clients, 3 chambres, "
         "4 dates et 4 réservations dans la table de faits, reliées par des clés étrangères "
@@ -1017,7 +1017,7 @@ elif page == "ETL — Source → Staging → DW":
     )
 
     section_title("Peut-on tout faire avec Claude Max « sans rien toucher » ?")
-    st.dataframe(ETL_CONNECTOR, width="stretch", hide_index=True)
+    st.dataframe(ETL_CONNECTOR, use_container_width=True, hide_index=True)
     st.info(
         "À retenir : l'ETL en **procédures SQL** est entièrement exécutable par Claude via "
         "MCP (résultats visibles dans SSMS). En revanche, **aucun connecteur MCP ne crée de "
@@ -1056,7 +1056,7 @@ elif page == "ETL — Source → Staging → DW":
     )
 
     section_title("Résultat testé (base POC_ETL_IA)")
-    st.dataframe(ETL_RESULT, width="stretch", hide_index=True)
+    st.dataframe(ETL_RESULT, use_container_width=True, hide_index=True)
     st.success(
         "✅ Pipeline validé : 6 lignes brutes (dont 1 doublon) → 6 en staging → 4 clients, "
         "3 chambres, 5 dates et 5 réservations dans la table de faits. Nettoyage "
