@@ -79,11 +79,14 @@ def inject_global_css() -> None:
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: {EY_BLACK};
+            background: {EY_BLACK} !important;
             border-bottom: 6px solid {EY_YELLOW};
             padding: 18px 28px;
             border-radius: 10px;
             margin-bottom: 28px;
+        }}
+        .ey-topbar, .ey-topbar * {{
+            color: {EY_WHITE} !important;
         }}
         .ey-topbar-left {{
             display: flex;
@@ -94,20 +97,20 @@ def inject_global_css() -> None:
             height: 40px;
         }}
         .ey-topbar-title {{
-            color: {EY_WHITE};
+            color: {EY_WHITE} !important;
             font-size: 1.25rem;
             font-weight: 700;
             line-height: 1.2;
             margin: 0;
         }}
         .ey-topbar-subtitle {{
-            color: #C9C9D6;
+            color: #D0D0DC !important;
             font-size: 0.85rem;
             margin: 0;
         }}
         .ey-topbar-tag {{
-            background: {EY_YELLOW};
-            color: {EY_BLACK};
+            background: {EY_YELLOW} !important;
+            color: {EY_BLACK} !important;
             font-weight: 700;
             font-size: 0.75rem;
             letter-spacing: 0.04em;
@@ -203,12 +206,16 @@ def inject_global_css() -> None:
         .ey-card .ey-badge-fail {{ color: {EY_DANGER} !important; }}
         .ey-card .ey-badge-warn {{ color: {EY_WARNING} !important; }}
         .ey-hero {{
-            background: linear-gradient(135deg, {EY_BLACK} 0%, #34343F 100%);
+            background: linear-gradient(135deg, {EY_BLACK} 0%, #34343F 100%) !important;
             border-radius: 14px;
             padding: 34px 36px;
             margin-bottom: 26px;
             position: relative;
             overflow: hidden;
+            color: {EY_WHITE} !important;
+        }}
+        .ey-hero, .ey-hero h1, .ey-hero p {{
+            color: {EY_WHITE} !important;
         }}
         .ey-hero::after {{
             content: "";
@@ -223,21 +230,21 @@ def inject_global_css() -> None:
             border-radius: 30px;
         }}
         .ey-hero h1 {{
-            color: {EY_WHITE};
+            color: {EY_WHITE} !important;
             font-size: 1.9rem;
             font-weight: 800;
             margin-bottom: 8px;
         }}
         .ey-hero p {{
-            color: #D8D8E2;
+            color: #E4E4EE !important;
             font-size: 1rem;
             max-width: 720px;
             margin: 0;
         }}
         .ey-eyebrow {{
             display: inline-block;
-            background: {EY_YELLOW};
-            color: {EY_BLACK};
+            background: {EY_YELLOW} !important;
+            color: {EY_BLACK} !important;
             font-weight: 700;
             font-size: 0.72rem;
             letter-spacing: 0.06em;
