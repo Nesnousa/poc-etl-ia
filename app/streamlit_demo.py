@@ -317,6 +317,11 @@ ETL_RESULT = [
 
 
 def read_text(path: Path) -> str:
+    if not path.exists():
+        return (
+            f"[Fichier manquant dans le déploiement : `{path.as_posix()}`]\n\n"
+            "Ce contenu est disponible dans le dépôt local du POC."
+        )
     return path.read_text(encoding="utf-8")
 
 
