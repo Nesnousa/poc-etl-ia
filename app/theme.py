@@ -205,12 +205,28 @@ def inject_global_css() -> None:
             border-radius: 14px;
             padding: 34px 36px;
             margin-bottom: 26px;
-            position: relative;
-            overflow: hidden;
-            color: {EY_WHITE} !important;
+            overflow: visible !important;
         }}
-        .ey-hero, .ey-hero h1, .ey-hero p {{
-            color: {EY_WHITE} !important;
+        .ey-hero .ey-hero-title {{
+            color: #FFFFFF !important;
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin: 10px 0 12px 0;
+            line-height: 1.3;
+        }}
+        .ey-hero .ey-hero-desc {{
+            color: #F0F0F5 !important;
+            font-size: 1rem;
+            max-width: 920px;
+            line-height: 1.55;
+            margin: 0;
+        }}
+        div[data-testid="stMarkdownContainer"] .ey-hero .ey-hero-title,
+        div[data-testid="stMarkdownContainer"] .ey-hero .ey-hero-desc {{
+            color: #FFFFFF !important;
+        }}
+        div[data-testid="stMarkdownContainer"] .ey-hero .ey-hero-desc {{
+            color: #F0F0F5 !important;
         }}
         .ey-hero::after {{
             content: "";
@@ -223,18 +239,7 @@ def inject_global_css() -> None:
             opacity: 0.12;
             transform: rotate(20deg);
             border-radius: 30px;
-        }}
-        .ey-hero h1 {{
-            color: {EY_WHITE} !important;
-            font-size: 1.9rem;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }}
-        .ey-hero p {{
-            color: #E4E4EE !important;
-            font-size: 1rem;
-            max-width: 720px;
-            margin: 0;
+            pointer-events: none;
         }}
         .ey-eyebrow {{
             display: inline-block;
@@ -247,6 +252,9 @@ def inject_global_css() -> None:
             padding: 4px 12px;
             border-radius: 999px;
             margin-bottom: 14px;
+        }}
+        div[data-testid="stMarkdownContainer"] .ey-eyebrow {{
+            color: {EY_BLACK} !important;
         }}
 
         .ey-section-title {{
@@ -349,13 +357,13 @@ def inject_global_css() -> None:
 
 
 def render_topbar(title: str, subtitle: str, tag: str = "POC — Stage EY") -> None:
-    """Bandeau noir : rendu via components.html pour éviter le sanitizer Streamlit."""
     logo_b64 = _logo_base64()
     logo_html = (
         f'<img src="data:image/png;base64,{logo_b64}" alt="EY" style="height:40px;" />'
         if logo_b64
         else ""
     )
+    # components.html : bandeau court, hauteur fixe OK
     html = f"""
     <div style="display:flex;align-items:center;justify-content:space-between;
                 background:#161616;border-bottom:6px solid #FFE600;
@@ -372,7 +380,7 @@ def render_topbar(title: str, subtitle: str, tag: str = "POC — Stage EY") -> N
                    border-radius:999px;">{tag}</span>
     </div>
     """
-    components.html(html, height=90)
+    components.html(html, height=92)
 
 
 def render_sidebar_brand(caption: str) -> None:
@@ -390,24 +398,17 @@ def render_sidebar_brand(caption: str) -> None:
 
 
 def hero(eyebrow: str, title: str, description: str) -> None:
-    """Hero sombre : components.html pour garder le texte blanc visible."""
-    html = f"""
-    <div style="background:linear-gradient(135deg,#161616 0%,#34343F 100%);
-                border-radius:14px;padding:28px 32px;font-family:Segoe UI,Tahoma,sans-serif;
-                box-sizing:border-box;">
-      <span style="display:inline-block;background:#FFE600;color:#161616;font-weight:700;
-                   font-size:0.72rem;letter-spacing:0.06em;text-transform:uppercase;
-                   padding:4px 12px;border-radius:999px;margin-bottom:12px;">{eyebrow}</span>
-      <div style="color:#FFFFFF;font-size:1.75rem;font-weight:800;margin:10px 0 12px 0;
-                  line-height:1.3;">{title}</div>
-      <div style="color:#E4E4EE;font-size:1rem;max-width:900px;line-height:1.55;">{description}</div>
-    </div>
-    """
-    # Hauteur généreuse : le iframe components.html coupe sinon le bas du texte
-    title_lines = max(1, (len(title) // 55) + 1)
-    desc_lines = max(2, (len(description) // 75) + 1)
-    height = 90 + (title_lines * 36) + (desc_lines * 28) + 48
-    components.html(html, height=height, scrolling=False)
+    """Hero en markdown (hauteur auto) — plus de coupure de texte."""
+    st.markdown(
+        f"""
+        <div class="ey-hero">
+            <div class="ey-eyebrow">{eyebrow}</div>
+            <div class="ey-hero-title">{title}</div>
+            <div class="ey-hero-desc">{description}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 
 def section_title(text: str) -> None:
