@@ -322,13 +322,20 @@ def inject_global_css() -> None:
             gap: 4px;
         }}
         .stTabs [data-baseweb="tab"] {{
-            background: {EY_LIGHT_GRAY};
+            background: {EY_LIGHT_GRAY} !important;
+            color: {EY_DARK} !important;
             border-radius: 8px 8px 0 0;
             padding: 8px 18px;
             font-weight: 600;
         }}
+        .stTabs [data-baseweb="tab"] * {{
+            color: {EY_DARK} !important;
+        }}
         .stTabs [aria-selected="true"] {{
             background: {EY_BLACK} !important;
+            color: {EY_WHITE} !important;
+        }}
+        .stTabs [aria-selected="true"] * {{
             color: {EY_WHITE} !important;
         }}
 
@@ -349,19 +356,26 @@ def inject_global_css() -> None:
 def render_topbar(title: str, subtitle: str, tag: str = "POC — Stage EY") -> None:
     logo_b64 = _logo_base64()
     logo_html = (
-        f'<img src="data:image/png;base64,{logo_b64}" alt="EY" />' if logo_b64 else ""
+        f'<img src="data:image/png;base64,{logo_b64}" alt="EY" style="height:40px;" />'
+        if logo_b64
+        else ""
     )
     st.markdown(
         f"""
-        <div class="ey-topbar">
-            <div class="ey-topbar-left">
+        <div style="display:flex;align-items:center;justify-content:space-between;
+                    background:#161616;border-bottom:6px solid #FFE600;
+                    padding:18px 28px;border-radius:10px;margin-bottom:28px;">
+            <div style="display:flex;align-items:center;gap:18px;">
                 {logo_html}
                 <div>
-                    <p class="ey-topbar-title">{title}</p>
-                    <p class="ey-topbar-subtitle">{subtitle}</p>
+                    <p style="color:#FFFFFF !important;font-size:1.25rem;font-weight:700;
+                              line-height:1.2;margin:0;">{title}</p>
+                    <p style="color:#D0D0DC !important;font-size:0.85rem;margin:0;">{subtitle}</p>
                 </div>
             </div>
-            <span class="ey-topbar-tag">{tag}</span>
+            <span style="background:#FFE600;color:#161616 !important;font-weight:700;
+                         font-size:0.75rem;letter-spacing:0.04em;text-transform:uppercase;
+                         padding:6px 14px;border-radius:999px;">{tag}</span>
         </div>
         """,
         unsafe_allow_html=True,
@@ -385,10 +399,17 @@ def render_sidebar_brand(caption: str) -> None:
 def hero(eyebrow: str, title: str, description: str) -> None:
     st.markdown(
         f"""
-        <div class="ey-hero">
-            <span class="ey-eyebrow">{eyebrow}</span>
-            <h1>{title}</h1>
-            <p>{description}</p>
+        <div style="background:linear-gradient(135deg,#161616 0%,#34343F 100%);
+                    border-radius:14px;padding:34px 36px;margin-bottom:26px;">
+            <span style="display:inline-block;background:#FFE600;color:#161616 !important;
+                         font-weight:700;font-size:0.72rem;letter-spacing:0.06em;
+                         text-transform:uppercase;padding:4px 12px;border-radius:999px;
+                         margin-bottom:14px;">{eyebrow}</span>
+            <h1 style="color:#FFFFFF !important;font-size:1.9rem;font-weight:800;
+                       margin:0 0 8px 0;">{title}</h1>
+            <p style="color:#E4E4EE !important;font-size:1rem;max-width:720px;margin:0;">
+                {description}
+            </p>
         </div>
         """,
         unsafe_allow_html=True,
