@@ -29,7 +29,7 @@ table dim_chambre
 		mode: import
 		source =
 			let
-			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    Source = Sql.Database(".\SQLEXPRESS", "POC_ETL_IA"),
 			    dbo_dim_chambre = Source{[Schema="dbo",Item="dim_chambre"]}[Data],
 			    #"Selected" = Table.SelectColumns(dbo_dim_chambre, {"chambre_key", "chambre_id", "type_chambre", "capacite"})
 			in

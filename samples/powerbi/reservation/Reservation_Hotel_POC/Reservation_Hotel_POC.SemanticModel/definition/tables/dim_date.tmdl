@@ -37,7 +37,7 @@ table dim_date
 		mode: import
 		source =
 			let
-			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    Source = Sql.Database(".\SQLEXPRESS", "POC_ETL_IA"),
 			    dbo_dim_date = Source{[Schema="dbo",Item="dim_date"]}[Data],
 			    #"Selected" = Table.SelectColumns(dbo_dim_date, {"date_key", "date_complete", "annee", "mois", "jour"})
 			in

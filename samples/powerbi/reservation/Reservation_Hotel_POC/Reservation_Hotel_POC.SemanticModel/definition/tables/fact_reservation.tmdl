@@ -74,7 +74,7 @@ table fact_reservation
 		mode: import
 		source =
 			let
-			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    Source = Sql.Database(".\SQLEXPRESS", "POC_ETL_IA"),
 			    dbo_fact_reservation = Source{[Schema="dbo",Item="fact_reservation"]}[Data],
 			    #"Selected" = Table.SelectColumns(dbo_fact_reservation, {"reservation_key", "reservation_id", "client_key", "chambre_key", "date_key", "nb_nuits", "montant", "montant_par_nuit"})
 			in

@@ -35,7 +35,7 @@ table dim_client
 		mode: import
 		source =
 			let
-			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    Source = Sql.Database(".\SQLEXPRESS", "POC_ETL_IA"),
 			    dbo_dim_client = Source{[Schema="dbo",Item="dim_client"]}[Data],
 			    #"Selected" = Table.SelectColumns(dbo_dim_client, {"client_key", "client_id", "client_nom_clean", "ville", "pays"})
 			in
