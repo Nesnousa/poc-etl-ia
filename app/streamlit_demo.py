@@ -300,14 +300,7 @@ ETL_PROCS_SQL = ROOT / "samples" / "sqlserver" / "reservation_etl_procedures.sql
 ETL_SSIS_GEN = ROOT / "ssis" / "reservation" / "generate_ssis_stg_reservation.py"
 ETL_MCP_PROMPT = ROOT / "prompts" / "prompt_claude_mcp_etl_complet.md"
 PBI_RESERVATION_PROMPT = ROOT / "prompts" / "prompt_claude_powerbi_reservation.md"
-PBI_RESERVATION_PBIP = (
-    ROOT
-    / "samples"
-    / "powerbi"
-    / "reservation"
-    / "Reservation_Hotel_POC"
-    / "Reservation_Hotel_POC.pbip"
-)
+PBI_RESERVATION_DAX = ROOT / "samples" / "powerbi" / "reservation" / "reservation_dax_measures.md"
 
 ETL_CONNECTOR = [
     {"Besoin": "Claude exécute du SQL (créer tables, lancer l'ETL)", "Connecteur ?": "Oui — MCP SQL Server (mssql)", "Statut": "✅ 100 % no-touch"},
@@ -1073,62 +1066,55 @@ elif page == "ETL — Source → Staging → DW":
         "montant par nuit calculé."
     )
 
-    section_title("Étape suivante — Power BI (implémenté)")
+    section_title("Étape suivante — Power BI (après l'ETL)")
     st.markdown(
         """
         <div class="ey-card" style="border-left:5px solid #FFE600;">
-        Après l'ETL, le reporting est déjà construit dans Power BI Desktop :<br>
-        <b>modèle en étoile</b> (DW) · <b>6 mesures DAX</b> · <b>dashboard Overview Réservations</b>
-        (4 KPI + CA par ville + CA par type de chambre + courbe dans le temps + table clients).
+        Une fois le DW chargé, l'encadrant n'a <b>qu'à coller un prompt</b> dans
+        <b>Claude Max</b> (ou ChatGPT / Copilot / Gemini). L'IA livrera le guide
+        Power BI Desktop + le DAX + le plan du dashboard.<br><br>
+        <b>Résultat sur le PC de l'encadrant :</b> modèle en étoile, 6 mesures DAX,
+        page <i>Overview Réservations</i> (4 KPI + CA par ville + CA par type de chambre
+        + courbe + table clients).
         </div>
         """,
         unsafe_allow_html=True,
     )
-    st.code(str(PBI_RESERVATION_PBIP), language="text")
+    c1, c2, c3, c4 = st.columns(4)
+    pbi_steps = [
+        ("1️⃣", "ETL terminé", "Tables DW visibles dans SSMS."),
+        ("2️⃣", "Coller le prompt", "Prompt A (réservations) ou B (générique)."),
+        ("3️⃣", "Suivre l'IA", "Import SQL → relations → DAX → visuels."),
+        ("4️⃣", "Dashboard", "Page Overview visible dans Power BI Desktop."),
+    ]
+    for col, (icon, title, desc) in zip([c1, c2, c3, c4], pbi_steps):
+        col.markdown(
+            f"""
+            <div class="ey-card" style="text-align:center;min-height:140px;">
+                <div style="font-size:1.5rem;">{icon}</div>
+                <b>{title}</b>
+                <p style="font-size:0.82rem;color:#555;margin-top:6px;">{desc}</p>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     st.info(
-        "Ouvrir le fichier `.pbip` (double-clic) dans Power BI Desktop, puis "
-        "**Appliquer les modifications** / Actualiser pour charger les données SQL Server."
-    )
-    c1, c2, c3 = st.columns(3)
-    c1.markdown(
-        """
-        <div class="ey-card" style="min-height:140px;">
-        <b>Modèle</b>
-        <p style="font-size:0.85rem;color:#555;">
-        fact_reservation → dim_client, dim_chambre, dim_date
-        </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    c2.markdown(
-        """
-        <div class="ey-card" style="min-height:140px;">
-        <b>Mesures</b>
-        <p style="font-size:0.85rem;color:#555;">
-        CA Total, Nb Réservations, Nb Nuits, CA Moyen, Montant/Nuit, Nb Clients
-        </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-    c3.markdown(
-        """
-        <div class="ey-card" style="min-height:140px;">
-        <b>Dashboard</b>
-        <p style="font-size:0.85rem;color:#555;">
-        Page « Overview Réservations » prête à la présentation
-        </p>
-        </div>
-        """,
-        unsafe_allow_html=True,
+        "Le prompt existe en **deux versions** : exemple **réservations** (prêt à coller) "
+        "et version **générique** (variables) pour tout projet. Voir l'encadré ci-dessous."
     )
 
     with st.expander("⭐ Prompt Claude Max — ETL complet (réservation + version générique)"):
         st.markdown(read_text(ETL_MCP_PROMPT))
 
-    with st.expander("📊 Prompt Claude Max — Power BI (dashboard + DAX + modèle)"):
+    with st.expander("📊 Prompt IA — Power BI dashboard (réservation + version générique)"):
+        st.success(
+            "À coller dans Claude Max / ChatGPT / Copilot / Gemini. "
+            "L'encadrant obtient ensuite le dashboard **dans Power BI Desktop sur son PC**."
+        )
         st.markdown(read_text(PBI_RESERVATION_PROMPT))
+
+    with st.expander("Mesures DAX prêtes à coller (référence réservations)"):
+        st.markdown(read_text(PBI_RESERVATION_DAX))
 
     with st.expander("🆕 Prompt Claude Max — Générer & déposer le package SSIS (MCP filesystem)"):
         st.info(

@@ -1,0 +1,2 @@
+Le projet Power BI a ete deplace vers un chemin COURT pour eviter l'erreur Windows 260 caracteres.
+Ouvrir: C:\POC_PBI\Resa\Resa.pbip
