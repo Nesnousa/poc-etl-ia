@@ -1,0 +1,44 @@
+table dim_date
+	lineageTag: 5487f80e-6736-4621-aea7-4a1f45321a4e
+	column date_key
+		dataType: int64
+		lineageTag: b371977f-c470-415f-9d7b-aa5f6ce7d7bc
+		summarizeBy: none
+		isKey
+		sourceColumn: date_key
+
+	column date_complete
+		dataType: dateTime
+		lineageTag: 7d1de1c9-98d3-4a96-883c-060538a92b43
+		summarizeBy: none
+		sourceColumn: date_complete
+		formatString: Short Date
+		dataCategory: Uncategorized
+
+	column annee
+		dataType: int64
+		lineageTag: c7af80ba-0257-4a01-9da5-7006998dbc89
+		summarizeBy: none
+		sourceColumn: annee
+
+	column mois
+		dataType: int64
+		lineageTag: d0fb1886-8914-4af7-a6c6-2d0056a83602
+		summarizeBy: none
+		sourceColumn: mois
+
+	column jour
+		dataType: int64
+		lineageTag: 81789aaa-e878-49cb-9d1a-6d95dbf8998d
+		summarizeBy: none
+		sourceColumn: jour
+
+	partition dim_date = m
+		mode: import
+		source =
+			let
+			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    dbo_dim_date = Source{[Schema="dbo",Item="dim_date"]}[Data],
+			    #"Selected" = Table.SelectColumns(dbo_dim_date, {"date_key", "date_complete", "annee", "mois", "jour"})
+			in
+			    #"Selected"

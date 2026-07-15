@@ -299,6 +299,15 @@ ETL_SETUP_SQL = ROOT / "samples" / "sqlserver" / "reservation_etl_setup.sql"
 ETL_PROCS_SQL = ROOT / "samples" / "sqlserver" / "reservation_etl_procedures.sql"
 ETL_SSIS_GEN = ROOT / "ssis" / "reservation" / "generate_ssis_stg_reservation.py"
 ETL_MCP_PROMPT = ROOT / "prompts" / "prompt_claude_mcp_etl_complet.md"
+PBI_RESERVATION_PROMPT = ROOT / "prompts" / "prompt_claude_powerbi_reservation.md"
+PBI_RESERVATION_PBIP = (
+    ROOT
+    / "samples"
+    / "powerbi"
+    / "reservation"
+    / "Reservation_Hotel_POC"
+    / "Reservation_Hotel_POC.pbip"
+)
 
 ETL_CONNECTOR = [
     {"Besoin": "Claude exécute du SQL (créer tables, lancer l'ETL)", "Connecteur ?": "Oui — MCP SQL Server (mssql)", "Statut": "✅ 100 % no-touch"},
@@ -1064,8 +1073,62 @@ elif page == "ETL — Source → Staging → DW":
         "montant par nuit calculé."
     )
 
+    section_title("Étape suivante — Power BI (implémenté)")
+    st.markdown(
+        """
+        <div class="ey-card" style="border-left:5px solid #FFE600;">
+        Après l'ETL, le reporting est déjà construit dans Power BI Desktop :<br>
+        <b>modèle en étoile</b> (DW) · <b>6 mesures DAX</b> · <b>dashboard Overview Réservations</b>
+        (4 KPI + CA par ville + CA par type de chambre + courbe dans le temps + table clients).
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    st.code(str(PBI_RESERVATION_PBIP), language="text")
+    st.info(
+        "Ouvrir le fichier `.pbip` (double-clic) dans Power BI Desktop, puis "
+        "**Appliquer les modifications** / Actualiser pour charger les données SQL Server."
+    )
+    c1, c2, c3 = st.columns(3)
+    c1.markdown(
+        """
+        <div class="ey-card" style="min-height:140px;">
+        <b>Modèle</b>
+        <p style="font-size:0.85rem;color:#555;">
+        fact_reservation → dim_client, dim_chambre, dim_date
+        </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    c2.markdown(
+        """
+        <div class="ey-card" style="min-height:140px;">
+        <b>Mesures</b>
+        <p style="font-size:0.85rem;color:#555;">
+        CA Total, Nb Réservations, Nb Nuits, CA Moyen, Montant/Nuit, Nb Clients
+        </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+    c3.markdown(
+        """
+        <div class="ey-card" style="min-height:140px;">
+        <b>Dashboard</b>
+        <p style="font-size:0.85rem;color:#555;">
+        Page « Overview Réservations » prête à la présentation
+        </p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     with st.expander("⭐ Prompt Claude Max — ETL complet (réservation + version générique)"):
         st.markdown(read_text(ETL_MCP_PROMPT))
+
+    with st.expander("📊 Prompt Claude Max — Power BI (dashboard + DAX + modèle)"):
+        st.markdown(read_text(PBI_RESERVATION_PROMPT))
 
     with st.expander("🆕 Prompt Claude Max — Générer & déposer le package SSIS (MCP filesystem)"):
         st.info(

@@ -1,0 +1,36 @@
+table dim_chambre
+	lineageTag: 7ec085ac-3f2e-4054-8c9a-ceaed587501c
+	column chambre_key
+		dataType: int64
+		lineageTag: f4d06ff4-61ff-4723-9a13-03ef281ada36
+		summarizeBy: none
+		isKey
+		sourceColumn: chambre_key
+
+	column chambre_id
+		dataType: string
+		lineageTag: 5ea56752-ad07-40d4-9287-98dc0fcc36cb
+		summarizeBy: none
+		sourceColumn: chambre_id
+
+	column type_chambre
+		dataType: string
+		lineageTag: 64c77b09-4fbf-4926-8073-88b441bbe751
+		summarizeBy: none
+		sourceColumn: type_chambre
+
+	column capacite
+		dataType: int64
+		lineageTag: 50e2df7b-4e19-48f3-88c3-1ecc3ca6e29c
+		summarizeBy: none
+		sourceColumn: capacite
+
+	partition dim_chambre = m
+		mode: import
+		source =
+			let
+			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    dbo_dim_chambre = Source{[Schema="dbo",Item="dim_chambre"]}[Data],
+			    #"Selected" = Table.SelectColumns(dbo_dim_chambre, {"chambre_key", "chambre_id", "type_chambre", "capacite"})
+			in
+			    #"Selected"

@@ -1,0 +1,80 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "table_clients",
+  "position": {
+    "x": 652,
+    "y": 428,
+    "z": 0,
+    "height": 276,
+    "width": 612,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_client"
+                    }
+                  },
+                  "Property": "client_nom_clean"
+                }
+              },
+              "queryRef": "dim_client.client_nom_clean",
+              "nativeQueryRef": "client_nom_clean"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_client"
+                    }
+                  },
+                  "Property": "ville"
+                }
+              },
+              "queryRef": "dim_client.ville",
+              "nativeQueryRef": "ville"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reservation"
+                    }
+                  },
+                  "Property": "CA Total"
+                }
+              },
+              "queryRef": "fact_reservation.CA Total",
+              "nativeQueryRef": "CA Total"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reservation"
+                    }
+                  },
+                  "Property": "Nb R\u00e9servations"
+                }
+              },
+              "queryRef": "fact_reservation.Nb R\u00e9servations",
+              "nativeQueryRef": "Nb R\u00e9servations"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

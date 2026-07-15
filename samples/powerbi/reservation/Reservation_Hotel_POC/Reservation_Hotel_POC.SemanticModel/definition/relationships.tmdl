@@ -1,0 +1,11 @@
+relationship fact_reservation_dim_client
+	fromColumn: fact_reservation.client_key
+	toColumn: dim_client.client_key
+
+relationship fact_reservation_dim_chambre
+	fromColumn: fact_reservation.chambre_key
+	toColumn: dim_chambre.chambre_key
+
+relationship fact_reservation_dim_date
+	fromColumn: fact_reservation.date_key
+	toColumn: dim_date.date_key

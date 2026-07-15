@@ -1,0 +1,42 @@
+table dim_client
+	lineageTag: f99bbd79-3c0d-4f73-91e3-1f30c18b6487
+	column client_key
+		dataType: int64
+		lineageTag: af320ab7-d18f-41c8-b64b-e3c7dd22d37f
+		summarizeBy: none
+		isKey
+		sourceColumn: client_key
+
+	column client_id
+		dataType: string
+		lineageTag: a164d2c3-c2ce-490d-abd8-974368cdbf9d
+		summarizeBy: none
+		sourceColumn: client_id
+
+	column client_nom_clean
+		dataType: string
+		lineageTag: fd48f937-eb3c-4aa1-9420-73ac85b4f1a4
+		summarizeBy: none
+		sourceColumn: client_nom_clean
+
+	column ville
+		dataType: string
+		lineageTag: db4faba5-2f72-4aa9-b7a6-5cb65dbd6e88
+		summarizeBy: none
+		sourceColumn: ville
+
+	column pays
+		dataType: string
+		lineageTag: 8a8e85ef-db30-4d7d-bb63-fcfcc906ef96
+		summarizeBy: none
+		sourceColumn: pays
+
+	partition dim_client = m
+		mode: import
+		source =
+			let
+			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    dbo_dim_client = Source{[Schema="dbo",Item="dim_client"]}[Data],
+			    #"Selected" = Table.SelectColumns(dbo_dim_client, {"client_key", "client_id", "client_nom_clean", "ville", "pays"})
+			in
+			    #"Selected"

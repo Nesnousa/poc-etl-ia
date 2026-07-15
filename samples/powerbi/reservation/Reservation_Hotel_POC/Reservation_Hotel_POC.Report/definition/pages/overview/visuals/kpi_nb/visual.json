@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "kpi_nb",
+  "position": {
+    "x": 332,
+    "y": 16,
+    "z": 0,
+    "height": 120,
+    "width": 300,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reservation"
+                    }
+                  },
+                  "Property": "Nb R\u00e9servations"
+                }
+              },
+              "queryRef": "fact_reservation.Nb R\u00e9servations",
+              "nativeQueryRef": "Nb R\u00e9servations"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

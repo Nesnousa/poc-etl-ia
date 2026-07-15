@@ -1,0 +1,17 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+annotation PBI_QueryOrder = ["fact_reservation","dim_client","dim_chambre","dim_date"]
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table fact_reservation
+ref table dim_client
+ref table dim_chambre
+ref table dim_date
+ref cultureInfo fr-FR

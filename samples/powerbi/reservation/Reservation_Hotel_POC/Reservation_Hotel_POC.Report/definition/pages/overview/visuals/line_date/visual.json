@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "line_date",
+  "position": {
+    "x": 16,
+    "y": 428,
+    "z": 0,
+    "height": 276,
+    "width": 620,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_date"
+                    }
+                  },
+                  "Property": "date_complete"
+                }
+              },
+              "queryRef": "dim_date.date_complete",
+              "nativeQueryRef": "date_complete"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reservation"
+                    }
+                  },
+                  "Property": "CA Total"
+                }
+              },
+              "queryRef": "fact_reservation.CA Total",
+              "nativeQueryRef": "CA Total"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

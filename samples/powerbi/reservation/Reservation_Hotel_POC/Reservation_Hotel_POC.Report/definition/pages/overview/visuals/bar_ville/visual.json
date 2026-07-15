@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "bar_ville",
+  "position": {
+    "x": 16,
+    "y": 152,
+    "z": 0,
+    "height": 260,
+    "width": 620,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_client"
+                    }
+                  },
+                  "Property": "ville"
+                }
+              },
+              "queryRef": "dim_client.ville",
+              "nativeQueryRef": "ville"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_reservation"
+                    }
+                  },
+                  "Property": "CA Total"
+                }
+              },
+              "queryRef": "fact_reservation.CA Total",
+              "nativeQueryRef": "CA Total"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,81 @@
+table fact_reservation
+	lineageTag: fc6a3bcd-85f7-40e5-9dd8-11e686b5de16
+	column reservation_key
+		dataType: int64
+		lineageTag: 9c19ed85-b55b-4fb6-8aad-00f24e0ea4a7
+		summarizeBy: none
+		isKey
+		sourceColumn: reservation_key
+
+	column reservation_id
+		dataType: string
+		lineageTag: 3f2f3a89-d749-4b94-a817-cd3066fbe722
+		summarizeBy: none
+		sourceColumn: reservation_id
+
+	column client_key
+		dataType: int64
+		lineageTag: d7825b1a-6a03-4c56-8d36-f6771a45a771
+		summarizeBy: none
+		sourceColumn: client_key
+
+	column chambre_key
+		dataType: int64
+		lineageTag: a8d7c842-0fd2-4905-afe3-d642176d63c7
+		summarizeBy: none
+		sourceColumn: chambre_key
+
+	column date_key
+		dataType: int64
+		lineageTag: 3a69c255-d11a-4300-bcae-53127e0c06a0
+		summarizeBy: none
+		sourceColumn: date_key
+
+	column nb_nuits
+		dataType: int64
+		lineageTag: 4ce639a7-ef2c-40f9-acd6-8ca40fac54e3
+		summarizeBy: none
+		sourceColumn: nb_nuits
+
+	column montant
+		dataType: decimal
+		lineageTag: a65ce90a-27ea-4757-86cc-e6d4ce62c7ab
+		summarizeBy: none
+		sourceColumn: montant
+		formatString: #,0.00
+
+	column montant_par_nuit
+		dataType: decimal
+		lineageTag: 25f85cb3-904e-4fef-8d24-63854692118d
+		summarizeBy: none
+		sourceColumn: montant_par_nuit
+		formatString: #,0.00
+
+
+	measure 'CA Total' = SUM ( fact_reservation[montant] )
+		formatString: #,0.00 €
+
+	measure 'Nb Réservations' = DISTINCTCOUNT ( fact_reservation[reservation_id] )
+		formatString: #,0
+
+	measure 'Nb Nuits Total' = SUM ( fact_reservation[nb_nuits] )
+		formatString: #,0
+
+	measure 'CA Moyen / Réservation' = DIVIDE ( [CA Total], [Nb Réservations] )
+		formatString: #,0.00 €
+
+	measure 'Montant Moyen / Nuit' = AVERAGE ( fact_reservation[montant_par_nuit] )
+		formatString: #,0.00 €
+
+	measure 'Nb Clients Distincts' = DISTINCTCOUNT ( fact_reservation[client_key] )
+		formatString: #,0
+
+	partition fact_reservation = m
+		mode: import
+		source =
+			let
+			    Source = Sql.Database("NESNOUSSA\\SQLEXPRESS", "POC_ETL_IA"),
+			    dbo_fact_reservation = Source{[Schema="dbo",Item="fact_reservation"]}[Data],
+			    #"Selected" = Table.SelectColumns(dbo_fact_reservation, {"reservation_key", "reservation_id", "client_key", "chambre_key", "date_key", "nb_nuits", "montant", "montant_par_nuit"})
+			in
+			    #"Selected"
