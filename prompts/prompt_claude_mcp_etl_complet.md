@@ -112,3 +112,68 @@ faite dans Visual Studio (packages déjà fournis : `PKG_STG_RESERVATION`,
 `PKG_DW_RESERVATION`). En revanche, l'IA peut **tout réaliser en SQL** via MCP, ce
 qui produit exactement le même résultat dans les mêmes tables. Les deux approches
 sont donc interchangeables pour la démonstration.
+
+---
+
+## D. Générer et déposer le package SSIS via Claude Max (MCP filesystem)
+
+> **Nouveauté** — Claude Max peut également **générer le fichier `.dtsx`** du package
+> SSIS et l'écrire directement sur le disque via le serveur MCP **`filesystem`**
+> (accès lecture/écriture local). Il suffit de copier le prompt ci-dessous dans
+> **Claude Desktop / Claude Max** avec les deux serveurs MCP actifs : `mssql` (SQL
+> Server) et `filesystem` (dossier projet SSIS).
+>
+> Résultat : le fichier `PKG_STG_RESERVATION.dtsx` est créé dans votre projet
+> Visual Studio — il ne reste qu'à **l'ouvrir et cliquer sur Execute Package**.
+
+```
+Tu es un ingénieur ETL (SQL Server + SSIS). Tu as accès à deux outils MCP :
+  - « mssql » : pour lire et exécuter du SQL sur la base POC_ETL_IA
+  - « filesystem » : pour lire et écrire des fichiers sur le disque local
+
+OBJECTIF : générer un package SSIS (fichier .dtsx) qui charge les données brutes
+de la table raw_hotel_reservation vers la table stg_hotel_reservation, puis
+l'enregistrer dans le projet SSIS existant.
+
+ÉTAPES (dans l'ordre) :
+1) LIS le fichier Python générateur via filesystem :
+   Chemin : ssis/reservation/generate_ssis_stg_reservation.py
+   Analyse son contenu pour comprendre la structure XML du .dtsx qu'il produit.
+
+2) GÉNÈRE le contenu XML complet du package SSIS PKG_STG_RESERVATION.dtsx
+   en respectant exactement la même structure que le générateur Python, avec :
+   - Source : table raw_hotel_reservation (OLE DB Source, connexion SQL Server Express)
+   - Destination : table stg_hotel_reservation (OLE DB Destination, mode FastLoad)
+   - Mappages de colonnes : tous les champs de raw vers stg
+   - Gestionnaire de connexion : connexion nommée « POC_ETL_IA » pointant sur
+     le serveur local (Data Source=.\SQLEXPRESS;Initial Catalog=POC_ETL_IA;
+     Provider=SQLNCLI11;Integrated Security=SSPI)
+   - Ajoute une tâche Execute SQL au début pour tronquer stg_hotel_reservation
+     avant le chargement (idempotence)
+
+3) ÉCRIS le fichier via filesystem :
+   Chemin cible : C:\POC_ETL_IA_SSIS\POC_ETL_IA_SSIS\PKG_STG_RESERVATION.dtsx
+   (remplace le fichier existant s'il existe)
+
+4) CONFIRME en listant via filesystem le contenu du dossier cible pour vérifier
+   que le fichier est bien présent et affiche sa taille.
+
+5) RESTITUTION : résumé des actions (fichier créé, mappages effectués, connexion
+   configurée) + instructions pour ouvrir et exécuter dans Visual Studio SSDT :
+   Fichier → Ajouter l'élément existant → sélectionner le .dtsx → clic droit
+   → Execute Package.
+
+CONTRAINTES : XML valide pour SSIS 2019 (TargetServerVersion=SQL2019) ;
+commente chaque section du XML ; n'écrase aucun autre fichier du projet.
+```
+
+> **Configuration MCP filesystem requise** (à ajouter dans `claude_desktop_config.json`) :
+> ```json
+> "filesystem": {
+>   "command": "npx",
+>   "args": ["-y", "@modelcontextprotocol/server-filesystem",
+>            "C:\\POC_ETL_IA_SSIS",
+>            "C:\\Users\\Nesrine\\OneDrive - Ministere de l'Enseignement Superieur et de la Recherche Scientifique\\Desktop\\EY intership 3\\ssis"]
+> }
+> ```
+> Redémarrez Claude Desktop après modification.

@@ -1067,6 +1067,37 @@ elif page == "ETL — Source → Staging → DW":
     with st.expander("⭐ Prompt Claude Max — ETL complet (réservation + version générique)"):
         st.markdown(read_text(ETL_MCP_PROMPT))
 
+    with st.expander("🆕 Prompt Claude Max — Générer & déposer le package SSIS (MCP filesystem)"):
+        st.info(
+            "Ce prompt permet à Claude Max de **créer le fichier `.dtsx`** du package SSIS "
+            "et de l'écrire directement dans votre projet Visual Studio via le serveur MCP "
+            "`filesystem`. Deux serveurs MCP requis : `mssql` + `filesystem`.",
+            icon="📦",
+        )
+        st.markdown(
+            """
+**Pré-requis** : ajoutez dans `claude_desktop_config.json` le serveur MCP `filesystem`
+pointant sur `C:\\POC_ETL_IA_SSIS` et `ssis/reservation/` *(voir section D du prompt ci-dessus)*.
+
+**Ce que Claude fait automatiquement :**
+1. Lit le générateur Python SSIS existant (via filesystem)
+2. Génère le XML complet du package `.dtsx`
+3. Écrit le fichier dans votre projet Visual Studio
+4. Vérifie que le fichier est bien présent sur le disque
+
+**Ce que vous faites :** ouvrir Visual Studio → clic droit → *Execute Package* ✅
+"""
+        )
+        # Afficher directement la section D du fichier prompt
+        full_prompt = read_text(ETL_MCP_PROMPT)
+        # Extraire uniquement la section D
+        marker = "## D. Générer et déposer le package SSIS"
+        if marker in full_prompt:
+            section_d = full_prompt[full_prompt.index(marker):]
+            st.markdown(section_d)
+        else:
+            st.markdown(full_prompt)
+
     with st.expander("Chemin A — Script de setup (raw + staging + DW + données)"):
         st.code(read_text(ETL_SETUP_SQL), language="sql")
 
